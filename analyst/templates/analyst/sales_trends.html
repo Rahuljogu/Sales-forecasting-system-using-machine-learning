@@ -1,0 +1,163 @@
+{% extends 'base/analyst_base.html' %}
+
+{% block title %}
+Sales Trends
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    Sales Trends
+</h2>
+
+<div class="row">
+
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Total Sales</h5>
+                <h3>₹{{ total_sales|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Average Sales</h5>
+                <h3>₹{{ average_sales|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Highest Sales</h5>
+                <h3>₹{{ highest_sales|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Lowest Sales</h5>
+                <h3>₹{{ lowest_sales|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-body">
+
+        <h4 class="mb-4">
+            Monthly Sales Trend
+        </h4>
+
+        <canvas id="salesChart"></canvas>
+
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+        <h4>Monthly Sales Summary</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Month</th>
+                    <th>Total Sales</th>
+                    <th>Average Sales</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for month in monthly_summary %}
+
+                <tr>
+                    <td>{{ month.month_name }}</td>
+                    <td>₹{{ month.total_sales|floatformat:2 }}</td>
+                    <td>₹{{ month.average_sales|floatformat:2 }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = {{ month_labels|safe }};
+
+const values = {{ month_values|safe }};
+
+new Chart(
+
+document.getElementById("salesChart"),
+
+{
+
+    type: "bar",
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: "Monthly Sales",
+
+            data: values,
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: true
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+{% endblock %}

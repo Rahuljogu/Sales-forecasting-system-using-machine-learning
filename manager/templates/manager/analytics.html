@@ -1,0 +1,91 @@
+{% extends 'base/manager_base.html' %}
+
+{% block title %}
+Analytics
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Sales Analytics</h2>
+
+
+<div class="row mb-4">
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Total Revenue</h5>
+                <h2>₹{{ total_revenue }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>Total Quantity Sold</h5>
+                <h2>{{ total_quantity }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Chart -->
+<div class="card shadow-sm">
+
+    <div class="card-header">
+        <h4 class="mb-0">Revenue by Stores</h4>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="regionChart"></canvas>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('regionChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ region_labels|safe }},
+
+        datasets: [{
+            label: 'Revenue',
+            data: {{ region_values|safe }},
+            borderWidth: 1
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+                beginAtZero: true
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

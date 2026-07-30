@@ -1,0 +1,205 @@
+{% extends 'base/analyst_base.html' %}
+
+{% block title %}
+Store Performance
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Store Performance</h2>
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Best Store</h5>
+                <h3>Store {{ best_store.store }}</h3>
+                <p>₹{{ best_store.total_sales|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Lowest Store</h5>
+                <h3>Store {{ lowest_store.store }}</h3>
+                <p>₹{{ lowest_store.total_sales|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Total Stores</h5>
+                <h3>{{ total_stores }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Average Store Sales</h5>
+                <h3>₹{{ average_store_sales|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+        <h4>Top 10 Store Performance</h4>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="storeChart"></canvas>
+
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+        <h4>Top 10 Performing Stores</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Rank</th>
+
+                    <th>Store</th>
+
+                    <th>Total Sales</th>
+
+                    <th>Average Sales</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in top_stores %}
+
+                <tr>
+
+                    <td>{{ forloop.counter }}</td>
+
+                    <td>Store {{ item.store }}</td>
+
+                    <td>₹{{ item.total_sales|floatformat:2 }}</td>
+
+                    <td>₹{{ item.average_sales|floatformat:2 }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+        <h4>Bottom 10 Performing Stores</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Store</th>
+
+                    <th>Total Sales</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in bottom_stores %}
+
+                <tr>
+
+                    <td>Store {{ item.store }}</td>
+
+                    <td>₹{{ item.total_sales|floatformat:2 }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('storeChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ chart_labels|safe }},
+
+        datasets: [{
+
+            label: 'Total Sales',
+
+            data: {{ chart_values|safe }},
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

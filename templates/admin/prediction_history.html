@@ -1,0 +1,41 @@
+{% extends 'base/admin_base.html' %}
+
+{% block title %}
+Prediction History
+{% endblock %}
+
+{% block content %}
+
+<h2>Prediction History</h2>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Store</th>
+            <th>Predicted Sales</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for prediction in predictions %}
+
+        <tr>
+
+            <td>{{ prediction.store }}</td>
+
+            <td>{{ prediction.predicted_sales }}</td>
+
+            <td>{{ prediction.created_at }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

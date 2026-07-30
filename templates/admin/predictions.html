@@ -1,0 +1,139 @@
+{% extends 'base/admin_base.html' %}
+
+{% block title %}
+Predictions
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+        <h2 class="mb-1">Sales Forecast Prediction</h2>
+        <p class="text-muted mb-0">Enter the current store and market values to generate the weekly sales forecast.</p>
+    </div>
+</div>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="row gx-4 gy-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-4 p-4">
+            <h5 class="mb-3">Input Parameters</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Store</label>
+                        <input type="number" name="store" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Holiday Flag</label>
+                        <input type="number" name="holiday_flag" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Temperature</label>
+                        <input type="number" step="0.0001" name="temperature" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Fuel Price</label>
+                        <input type="number" step="0.0001" name="fuel_price" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">CPI</label>
+                        <input type="number" step="0.0001" name="cpi" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Unemployment</label>
+                        <input type="number" step="0.0001" name="unemployment" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Year</label>
+                        <input type="number" name="year" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Month</label>
+                        <input type="number" name="month" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Week</label>
+                        <input type="number" name="week" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Quarter</label>
+                        <input type="number" name="quarter" class="form-control" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4 px-5">Predict Sales</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm rounded-4 p-4 h-100">
+            <div class="mb-3">
+                <h5 class="mb-1">Prediction Result</h5>
+                <p class="text-muted mb-0">The forecast outcome will appear here after submission.</p>
+            </div>
+            {% if prediction %}
+                <div class="alert alert-success rounded-4 p-4">
+                    <h6 class="text-uppercase text-success mb-3">Weekly Sales Forecast</h6>
+                    <h1 class="display-5 mb-0">{{ prediction }}</h1>
+                    <p class="text-muted mt-3 mb-0">Generated from the trained model based on supplied inputs.</p>
+                </div>
+            {% else %}
+                <div class="border rounded-4 p-4 text-center text-muted" style="min-height: 240px;">
+                    <p class="mb-1">No prediction has been generated yet.</p>
+                    <small>Submit the form to see your forecast result.</small>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Loading Spinner Overlay -->
+<div id="ml-spinner-overlay" class="spinner-overlay d-none">
+    <div class="spinner-content text-center p-4 rounded shadow bg-white">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="h5 mb-2">Please wait, predicting...</div>
+    </div>
+</div>
+
+<style>
+    .spinner-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1055;
+    }
+    .spinner-content {
+        min-width: 280px;
+        max-width: 90%;
+    }
+</style>
+
+<!-- Bootstrap JS for Tab functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form');
+        var overlay = document.getElementById('ml-spinner-overlay');
+
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                var submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                }
+                overlay.classList.remove('d-none');
+            });
+        });
+    });
+</script>
+{% endblock %}

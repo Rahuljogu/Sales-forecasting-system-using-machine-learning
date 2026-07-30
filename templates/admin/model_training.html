@@ -1,0 +1,331 @@
+{% extends 'base/admin_base.html' %}
+
+{% block title %}
+Model Training
+{% endblock %}
+
+{% block content %}
+
+<h2>Machine Learning Pipeline</h2>
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<!-- Navigation Bar -->
+<div class="mb-4">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'upload-section' %}active{% endif %}" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-section" type="button" role="tab">
+                Dataset Upload
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'loading-section' %}active{% endif %}" id="loading-tab" data-bs-toggle="tab" data-bs-target="#loading-section" type="button" role="tab">
+                Loading Dataset
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'preprocessing-section' %}active{% endif %}" id="preprocessing-tab" data-bs-toggle="tab" data-bs-target="#preprocessing-section" type="button" role="tab">
+                Data Preprocessing
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'splitting-section' %}active{% endif %}" id="splitting-tab" data-bs-toggle="tab" data-bs-target="#splitting-section" type="button" role="tab">
+                Splitting Dataset
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'fitting-section' %}active{% endif %}" id="fitting-tab" data-bs-toggle="tab" data-bs-target="#fitting-section" type="button" role="tab">
+                Model Fitting
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'train-section' %}active{% endif %}" id="train-tab" data-bs-toggle="tab" data-bs-target="#train-section" type="button" role="tab">
+                Train Model
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if active_tab == 'save-section' %}active{% endif %}" id="save-tab" data-bs-toggle="tab" data-bs-target="#save-section" type="button" role="tab">
+                Save
+            </button>
+        </li>
+    </ul>
+</div>
+
+<!-- Tab Content -->
+<div class="tab-content">
+
+    <!-- Dataset Upload Section -->
+    <div class="tab-pane fade {% if active_tab == 'upload-section' %}show active{% endif %}" id="upload-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Dataset Upload</h4>
+            <hr>
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="upload">
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload Dataset</button>
+            </form>
+            {% if upload_message %}
+                <div class="alert alert-success mt-3">{{ upload_message }}</div>
+                <p><strong>Total Records:</strong> {{ total_records }}</p>
+                <p><strong>Columns:</strong> {{ columns|join:", " }}</p>
+            {% endif %}
+            {% if preview %}
+                <div class="mt-3">{{ preview|safe }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Loading Dataset Section -->
+    <div class="tab-pane fade {% if active_tab == 'loading-section' %}show active{% endif %}" id="loading-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Loading Dataset</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="load">
+                <input type="hidden" name="active_tab" value="loading-section">
+                <button type="submit" class="btn btn-secondary">Load Dataset</button>
+            </form>
+            {% if load_message %}
+                <div class="alert alert-success mt-3">{{ load_message }}</div>
+                <p><strong>Total Records:</strong> {{ total_records }}</p>
+                <p><strong>Columns:</strong> {{ columns|join:", " }}</p>
+                {% if preview %}
+                    <div class="mt-3">{{ preview|safe }}</div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Data Preprocessing Section -->
+    <div class="tab-pane fade {% if active_tab == 'preprocessing-section' %}show active{% endif %}" id="preprocessing-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Data Preprocessing</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="preprocess">
+                <input type="hidden" name="active_tab" value="preprocessing-section">
+                <button type="submit" class="btn btn-secondary">Run Preprocessing</button>
+            </form>
+            {% if preprocess_message %}
+                <div class="alert alert-success mt-3">{{ preprocess_message }}</div>
+                <p><strong>Rows:</strong> {{ num_rows }}</p>
+                <p><strong>Features:</strong> {{ num_features }}</p>
+                <p><strong>Target:</strong> {{ target_name }}</p>
+            {% else %}
+                <ul>
+                    <li>Missing values will be handled.</li>
+                    <li>Duplicate records will be removed.</li>
+                    <li>Feature encoding and cleanup will be applied.</li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Splitting Dataset Section -->
+    <div class="tab-pane fade {% if active_tab == 'splitting-section' %}show active{% endif %}" id="splitting-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Splitting Dataset</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="split">
+                <input type="hidden" name="active_tab" value="splitting-section">
+                <button type="submit" class="btn btn-secondary">Split Dataset</button>
+            </form>
+            {% if split_message %}
+                <div class="alert alert-success mt-3">{{ split_message }}</div>
+                <p><strong>Training Records:</strong> {{ training_records }}</p>
+                <p><strong>Testing Records:</strong> {{ testing_records }}</p>
+                <p><strong>Split Ratio:</strong> {{ split_ratio }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Model Fitting Section -->
+    <div class="tab-pane fade {% if active_tab == 'fitting-section' %}show active{% endif %}" id="fitting-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Model Fitting</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="fit">
+                <input type="hidden" name="active_tab" value="fitting-section">
+                <div class="mb-3">
+                    <label class="form-label">Algorithm</label>
+                    <input type="text"
+                        class="form-control"
+                        value="Decision Tree, Random Forest, XGBoost"
+                        readonly>
+                </div>
+                <button type="submit" class="btn btn-secondary">Fit Model</button>
+            </form>
+            {% if fit_message %}
+                <div class="alert alert-success mt-3">{{ fit_message }}</div>
+                <p><strong>Algorithms:</strong> Decision Tree, Random Forest, XGBoost</p>
+                <p><strong>Status:</strong> {{ model_status }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Train Model Section -->
+    <div class="tab-pane fade {% if active_tab == 'train-section' %}show active{% endif %}" id="train-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Train Model</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="train">
+                <input type="hidden" name="active_tab" value="train-section">
+                <div class="mb-3">
+                    <label class="form-label">Algorithm</label>
+                    <input type="text"
+                        class="form-control"
+                        value="Decision Tree, Random Forest, XGBoost"
+                        readonly>
+                </div>
+                <button type="submit" class="btn btn-secondary">Evaluate Model</button>
+            </form>
+            {% if train_message %}
+                <div class="alert alert-success mt-3">{{ train_message }}</div>
+                <p><strong>Algorithm:</strong> XGBoost Regressor</p>
+                <p><strong>Status:</strong> {{ model_status }}</p>
+            {% endif %}
+        </div>
+        {% if results %}
+        <div class="card p-3 mb-3">
+        
+            <h4>Model Comparison</h4>
+        
+            <hr>
+        
+            <table class="table table-bordered">
+            
+                <thead class="table-dark">
+                
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Train R²</th>
+                        <th>Test R²</th>
+                        <th>MAE</th>
+                        <th>RMSE</th>
+                    </tr>
+                
+                </thead>
+            
+                <tbody>
+                
+                {% for algorithm, metric in results.items %}
+                
+                    <tr>
+                    
+                        <td>{{ algorithm }}</td>
+                    
+                        <td>{{ metric.train_score }}</td>
+                    
+                        <td>{{ metric.test_score }}</td>
+                    
+                        <td>{{ metric.mae }}</td>
+                    
+                        <td>{{ metric.rmse }}</td>
+                    
+                    </tr>
+                
+                {% endfor %}
+                
+                </tbody>
+            
+            </table>
+        
+            <div class="alert alert-success">
+            
+                <strong>Best Model :</strong>
+            
+                {{ best_algorithm }}
+            
+            </div>
+        
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Save Section -->
+    <div class="tab-pane fade {% if active_tab == 'save-section' %}show active{% endif %}" id="save-section" role="tabpanel">
+        <div class="card p-3 mb-3">
+            <h4>Save Model</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="save">
+                <input type="hidden" name="active_tab" value="save-section">
+                <div class="mb-3">
+                    <label class="form-label">Model to Save</label>
+                    <input type="text"
+                        class="form-control"
+                        value="{{ best_algorithm }}"
+                        readonly>
+                </div>
+                <button type="submit" class="btn btn-secondary">Save Model</button>
+            </form>
+            {% if save_message %}
+                <div class="alert alert-success mt-3">{{ save_message }}</div>
+                <p><strong>Status:</strong> {{ model_status }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Loading Spinner Overlay -->
+<div id="ml-spinner-overlay" class="spinner-overlay d-none">
+    <div class="spinner-content text-center p-4 rounded shadow bg-white">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="h5 mb-2">Please wait, processing...</div>
+    </div>
+</div>
+
+<style>
+    .spinner-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1055;
+    }
+    .spinner-content {
+        min-width: 280px;
+        max-width: 90%;
+    }
+</style>
+
+<!-- Bootstrap JS for Tab functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form');
+        var overlay = document.getElementById('ml-spinner-overlay');
+
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                var submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                }
+                overlay.classList.remove('d-none');
+            });
+        });
+    });
+</script>
+
+{% endblock %}
