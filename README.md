@@ -193,6 +193,8 @@ http://127.0.0.1:8000/
 
 ![Login Page](screenshots/login.png)
 
+![evaluate page](screenshots/evaluate.png)
+
 
 
 
