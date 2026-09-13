@@ -23,7 +23,7 @@ https://github.com/Rahuljogu/Sales-forecasting-system-using-machine-learning
 ## 📊 Dashboard Screenshots
 
 ### Sales Overview
-![Sales Overview](screenshots/Sales Overview.png)
+![Sales Overview](screenshots/sales.png)
 
 ### ML Forecast
 ![ML Forecast](screenshots/ML sales Forecast.png)
