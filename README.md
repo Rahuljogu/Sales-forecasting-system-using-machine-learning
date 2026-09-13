@@ -22,6 +22,8 @@ https://github.com/Rahuljogu/Sales-forecasting-system-using-machine-learning
 ---
 ## 📊 Power BI Dashboard Screenshots
 
+If you want to see the live power bi interaction dashboard download Sales_Forecasting_PowerBI_Dashboard.pbix from the project repository
+
 ### Sales Overview
 ![Sales Overview](screenshots/sales.png)
 
