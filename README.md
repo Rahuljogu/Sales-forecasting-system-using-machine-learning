@@ -20,7 +20,7 @@ A web-based **Sales Forecasting System** built with **Python, Django, and Machin
 https://github.com/Rahuljogu/Sales-forecasting-system-using-machine-learning
 
 ---
-## 📊 Dashboard Screenshots
+## 📊 Power BI Dashboard Screenshots
 
 ### Sales Overview
 ![Sales Overview](screenshots/sales.png)
