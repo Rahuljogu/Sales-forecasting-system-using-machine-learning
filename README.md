@@ -20,7 +20,19 @@ A web-based **Sales Forecasting System** built with **Python, Django, and Machin
 https://github.com/Rahuljogu/Sales-forecasting-system-using-machine-learning
 
 ---
+## 📊 Dashboard Screenshots
 
+### Sales Overview
+![Sales Overview](screenshots/sales-overview.png)
+
+### ML Forecast
+![ML Forecast](screenshots/ml-forecast.png)
+
+### Future Forecast
+![Future Forecast](screenshots/future-forecast.png)
+
+### Combined Forecast
+![Combined Forecast](screenshots/combined-forecast.png)
 ## 📌 Project Overview
 
 The Sales Forecasting System helps organizations make data-driven decisions by predicting future sales using historical data. It provides separate dashboards for different users and allows administrators to manage datasets, train machine learning models, and generate accurate sales predictions.
