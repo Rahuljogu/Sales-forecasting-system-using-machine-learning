@@ -1,0 +1,204 @@
+{% extends 'base/analyst_base.html' %}
+
+{% block title %}
+Revenue Analysis
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Revenue Analysis</h2>
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Total Revenue</h5>
+                <h3>₹{{ total_revenue|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Average Revenue</h5>
+                <h3>₹{{ average_revenue|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Highest Revenue</h5>
+                <h3>₹{{ highest_revenue|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Lowest Revenue</h5>
+                <h3>₹{{ lowest_revenue|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+
+        <h4>Monthly Revenue Chart</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="revenueChart"></canvas>
+
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+
+        <h4>Monthly Revenue Summary</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Month</th>
+
+                    <th>Revenue</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in revenue_summary %}
+
+                <tr>
+
+                    <td>{{ item.month }}</td>
+
+                    <td>₹{{ item.revenue|floatformat:2 }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+
+        <h4>Top 5 Revenue Months</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Rank</th>
+
+                    <th>Month</th>
+
+                    <th>Revenue</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in top_revenue %}
+
+                <tr>
+
+                    <td>{{ forloop.counter }}</td>
+
+                    <td>{{ item.month }}</td>
+
+                    <td>₹{{ item.revenue|floatformat:2 }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('revenueChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ chart_labels|safe }},
+
+        datasets: [{
+
+            label: 'Monthly Revenue',
+
+            data: {{ chart_values|safe }},
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

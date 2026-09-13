@@ -1,0 +1,743 @@
+{% extends 'base/analyst_base.html' %}
+{% load static %}
+
+{% block title %}Power BI Analytics{% endblock %}
+
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .powerbi-page {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 4px 0 35px;
+    }
+
+    /* ================================
+       HERO SECTION
+    ================================= */
+
+    .powerbi-hero {
+        background: linear-gradient(135deg, #0b2240 0%, #174a86 55%, #2563a8 100%);
+        color: #ffffff;
+        border-radius: 18px;
+        padding: 30px 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+    }
+
+    .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+    }
+
+    .hero-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+        flex-shrink: 0;
+    }
+
+    .powerbi-hero h1 {
+        margin: 0;
+        font-size: 31px;
+        font-weight: 750;
+        letter-spacing: -0.4px;
+    }
+
+    .powerbi-hero p {
+        margin: 5px 0 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.90);
+    }
+
+    .status-note {
+        margin-top: 20px;
+        padding: 13px 16px;
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 13.5px;
+        line-height: 1.6;
+    }
+
+    .status-note strong {
+        color: #ffffff;
+    }
+
+    /* ================================
+       SUMMARY CARDS
+    ================================= */
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .summary-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 20px;
+        border: 1px solid #e5eaf0;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+    }
+
+    .summary-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 8px;
+    }
+
+    .summary-value {
+        font-size: 21px;
+        font-weight: 750;
+        color: #0f172a;
+    }
+
+    .summary-description {
+        margin-top: 5px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    /* ================================
+       SECTION HEADER
+    ================================= */
+
+    .section-header {
+        margin: 4px 0 15px;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        font-size: 21px;
+        color: #0f172a;
+        font-weight: 750;
+    }
+
+    .section-header p {
+        margin: 5px 0 0;
+        color: #64748b;
+        font-size: 13.5px;
+    }
+
+    /* ================================
+       DASHBOARD CARDS
+    ================================= */
+
+    .dashboard-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border: 1px solid #e5eaf0;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+    }
+
+    .dashboard-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 16px;
+    }
+
+    .dashboard-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: #eef5fc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .dashboard-card h3 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .dashboard-card .description {
+        color: #64748b;
+        font-size: 13.5px;
+        line-height: 1.55;
+        margin-top: 3px;
+    }
+
+    .dashboard-badge {
+        white-space: nowrap;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    /* ================================
+       POWER BI IMAGES
+    ================================= */
+
+    .dashboard-image-container {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 11px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    .dashboard-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 10px;
+    }
+
+    /* ================================
+       TWO COLUMN LAYOUT
+    ================================= */
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .dashboard-grid .dashboard-card {
+        margin-bottom: 0;
+    }
+
+    /* ================================
+       INSIGHTS
+    ================================= */
+
+    .insights-section {
+        margin-top: 5px;
+    }
+
+    .insights-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .insight-card {
+        background: #ffffff;
+        border: 1px solid #e5eaf0;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .insight-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #eef5fc;
+        color: #174a86;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .insight-card h4 {
+        margin: 0 0 7px;
+        font-size: 15px;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .insight-card p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* ================================
+       PROJECT INFORMATION
+    ================================= */
+
+    .project-info {
+        margin-top: 24px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #174a86;
+        padding: 18px 20px;
+        border-radius: 10px;
+        color: #334155;
+        font-size: 13.5px;
+        line-height: 1.7;
+    }
+
+    .project-info strong {
+        color: #0f172a;
+    }
+
+    .project-info code {
+        background: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    /* ================================
+       FOOTER NOTE
+    ================================= */
+
+    .portfolio-footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    /* ================================
+       RESPONSIVE
+    ================================= */
+
+    @media (max-width: 1100px) {
+        .summary-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .insights-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .powerbi-page {
+            padding: 0 5px 25px;
+        }
+
+        .powerbi-hero {
+            padding: 23px 20px;
+            border-radius: 14px;
+        }
+
+        .powerbi-hero h1 {
+            font-size: 24px;
+        }
+
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-card {
+            padding: 14px;
+            border-radius: 12px;
+        }
+
+        .dashboard-card-header {
+            flex-direction: column;
+        }
+
+        .dashboard-badge {
+            align-self: flex-start;
+        }
+    }
+</style>
+
+
+<div class="powerbi-page">
+
+    <!-- ================================
+         HERO
+    ================================= -->
+
+    <div class="powerbi-hero">
+
+        <div class="hero-top">
+            <div class="hero-icon">📊</div>
+
+            <div>
+                <h1>Power BI Analytics</h1>
+                <p>
+                    Business intelligence layer for the
+                    Machine Learning Based Sales Forecasting System.
+                </p>
+            </div>
+        </div>
+
+        <div class="status-note">
+            <strong>Portfolio mode:</strong>
+            Power BI is currently maintained in Power BI Desktop and is not
+            published online. The dashboard views below are included for
+            demonstration and portfolio purposes.
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         DASHBOARD SUMMARY
+    ================================= -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="summary-label">Dashboard Views</div>
+            <div class="summary-value">4</div>
+            <div class="summary-description">
+                Power BI analytics pages
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">Analytics Type</div>
+            <div class="summary-value">BI + ML</div>
+            <div class="summary-description">
+                Business intelligence & forecasting
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">Forecast Horizon</div>
+            <div class="summary-value">12 Weeks</div>
+            <div class="summary-description">
+                Future sales forecasting
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">Report Format</div>
+            <div class="summary-value">.PBIX</div>
+            <div class="summary-description">
+                Power BI Desktop report
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         SALES OVERVIEW
+    ================================= -->
+
+    <div class="section-header">
+        <h2>Business Performance Overview</h2>
+        <p>
+            Historical sales performance, trends, store analysis and business indicators.
+        </p>
+    </div>
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <div>
+                <div class="dashboard-card-title">
+                    <div class="card-icon">📈</div>
+
+                    <div>
+                        <h3>Sales Overview</h3>
+
+                        <div class="description">
+                            Historical sales KPIs, yearly/monthly trends,
+                            store-level sales and holiday impact.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-badge">
+                Historical Analysis
+            </div>
+
+        </div>
+
+        <div class="dashboard-image-container">
+            <img
+                class="dashboard-image"
+                src="{% static 'powerbi/sales-overview.png' %}"
+                alt="Power BI Sales Overview dashboard"
+                loading="lazy"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         FORECASTING DASHBOARDS
+    ================================= -->
+
+    <div class="section-header">
+        <h2>Forecasting & Model Analytics</h2>
+        <p>
+            Machine learning predictions, model performance and future sales forecasts.
+        </p>
+    </div>
+
+
+    <div class="dashboard-grid">
+
+        <!-- ML FORECAST -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <div class="dashboard-card-title">
+
+                        <div class="card-icon">🤖</div>
+
+                        <div>
+                            <h3>ML Forecast & Model Performance</h3>
+
+                            <div class="description">
+                                Actual vs predicted sales, forecast accuracy,
+                                WMAPE, MAPE and store-level prediction error.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="dashboard-badge">
+                    Machine Learning
+                </div>
+
+            </div>
+
+            <div class="dashboard-image-container">
+                <img
+                    class="dashboard-image"
+                    src="{% static 'powerbi/ml-forecast.png' %}"
+                    alt="Power BI ML Forecast and Model Performance dashboard"
+                    loading="lazy"
+                >
+            </div>
+
+        </div>
+
+
+        <!-- FUTURE FORECAST -->
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <div class="dashboard-card-title">
+
+                        <div class="card-icon">🔮</div>
+
+                        <div>
+                            <h3>Future Forecast</h3>
+
+                            <div class="description">
+                                Baseline 12-week future sales forecast
+                                with store filtering and forecast trend analysis.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="dashboard-badge">
+                    Future Prediction
+                </div>
+
+            </div>
+
+            <div class="dashboard-image-container">
+                <img
+                    class="dashboard-image"
+                    src="{% static 'powerbi/future-forecast.png' %}"
+                    alt="Power BI Future Sales Forecast dashboard"
+                    loading="lazy"
+                >
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         COMBINED FORECAST
+    ================================= -->
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <div>
+                <div class="dashboard-card-title">
+
+                    <div class="card-icon">📊</div>
+
+                    <div>
+                        <h3>Combined Forecast</h3>
+
+                        <div class="description">
+                            Historical actual sales, historical ML predictions
+                            and future forecast displayed together on one timeline.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="dashboard-badge">
+                End-to-End View
+            </div>
+
+        </div>
+
+        <div class="dashboard-image-container">
+            <img
+                class="dashboard-image"
+                src="{% static 'powerbi/combined-forecast.png' %}"
+                alt="Power BI Combined Sales Forecast dashboard"
+                loading="lazy"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         BUSINESS INSIGHTS
+    ================================= -->
+
+    <div class="insights-section">
+
+        <div class="section-header">
+            <h2>Business Insights</h2>
+            <p>
+                Key analytical areas supported by the integrated dashboard.
+            </p>
+        </div>
+
+        <div class="insights-grid">
+
+            <div class="insight-card">
+
+                <div class="insight-number">01</div>
+
+                <h4>Sales Trend Analysis</h4>
+
+                <p>
+                    Analyze historical sales movement across different
+                    time periods and identify changes in business performance.
+                </p>
+
+            </div>
+
+
+            <div class="insight-card">
+
+                <div class="insight-number">02</div>
+
+                <h4>Store-Level Performance</h4>
+
+                <p>
+                    Compare sales performance between stores and identify
+                    locations contributing strongly to overall revenue.
+                </p>
+
+            </div>
+
+
+            <div class="insight-card">
+
+                <div class="insight-number">03</div>
+
+                <h4>Forecast-Based Planning</h4>
+
+                <p>
+                    Use machine learning forecasts and future projections
+                    to support inventory, sales and business planning decisions.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         PROJECT INFORMATION
+    ================================= -->
+
+    <div class="project-info">
+
+        <strong>Power BI report:</strong>
+
+        The editable <code>Sales_Forecasting_PowerBI_Dashboard.pbix</code>
+        report is included in the project's <code>powerbi/</code> folder.
+
+        Open the report using Power BI Desktop to interact with
+        slicers, filters, measures, data models and visuals.
+
+        <br><br>
+
+        <strong>Integration:</strong>
+
+        This dashboard is part of the
+        <strong>Machine Learning Based Sales Forecasting System</strong>,
+        combining Django application functionality, machine learning
+        predictions and Power BI business analytics.
+
+    </div>
+
+
+    <!-- ================================
+         FOOTER
+    ================================= -->
+
+    <div class="portfolio-footer">
+        Sales Forecasting & Business Analytics • Power BI • Machine Learning • Django
+    </div>
+
+</div>
+
+{% endblock %}

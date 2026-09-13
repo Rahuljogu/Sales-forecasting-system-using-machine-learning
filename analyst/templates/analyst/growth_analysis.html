@@ -1,0 +1,115 @@
+{% extends 'base/analyst_base.html' %}
+
+{% block title %}
+Growth Analysis
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Growth Analysis</h2>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Highest Growth</h5>
+                <h3>{{ highest_growth.month }}</h3>
+                <h4 class="text-success">
+                    {{ highest_growth.growth|floatformat:2 }}%
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Lowest Growth</h5>
+                <h3>{{ lowest_growth.month }}</h3>
+                <h4 class="text-danger">
+                    {{ lowest_growth.growth|floatformat:2 }}%
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h5>Average Growth</h5>
+                <h3 class="text-primary">
+                    {{ average_growth|floatformat:2 }}%
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow mt-4">
+
+    <div class="card-header">
+        <h4>Monthly Growth Summary</h4>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Month</th>
+
+                    <th>Total Sales</th>
+
+                    <th>Growth %</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in growth_data %}
+
+                <tr>
+
+                    <td>{{ item.month }}</td>
+
+                    <td>₹{{ item.sales|floatformat:2 }}</td>
+
+                    <td>
+
+                        {% if item.growth == None %}
+
+                            -
+
+                        {% elif item.growth > 0 %}
+
+                            <span class="text-success fw-bold">
+                                {{ item.growth|floatformat:2 }}%
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-danger fw-bold">
+                                {{ item.growth|floatformat:2 }}%
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+{% endblock %}

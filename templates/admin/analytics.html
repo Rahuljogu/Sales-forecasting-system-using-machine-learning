@@ -1,0 +1,82 @@
+{% extends 'base/admin_base.html' %}
+
+{% block title %}
+Analytics Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2>Analytics Dashboard</h2>
+
+{% if error %}
+
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+
+{% else %}
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Total Records</h5>
+            <h3>{{ total_records }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Total Columns</h5>
+            <h3>{{ total_columns }}</h3>
+        </div>
+    </div>
+
+</div>
+
+<br>
+
+<h4>Columns</h4>
+
+<ul>
+
+{% for col in columns %}
+
+<li>{{ col }}</li>
+
+{% endfor %}
+
+</ul>
+
+{% if avg_sales %}
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Average Sales</h5>
+            <h3>{{ avg_sales }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Maximum Sales</h5>
+            <h3>{{ max_sales }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Minimum Sales</h5>
+            <h3>{{ min_sales }}</h3>
+        </div>
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endif %}
+
+{% endblock %}

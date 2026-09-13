@@ -1,0 +1,97 @@
+{% extends 'base/admin_base.html' %}
+
+{% block title %}
+User Management
+{% endblock %}
+
+{% block content %}
+
+<h2>User Management</h2>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for profile in profiles %}
+
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ profile.user.username }}</td>
+            <td>{{ profile.user.email }}</td>
+            <td>{{ profile.role }}</td>
+
+            <td>
+                {% if not profile.is_approved %}
+                    <span class="badge bg-warning text-dark">
+                        Pending
+                    </span>
+                {% elif profile.user.is_active %}
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">
+                        Inactive
+                    </span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if not profile.is_approved %}
+                    <form method="post" action="{% url 'activate_user' profile.user.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Activate
+                        </button>
+                    </form>
+                {% elif profile.user.is_active %}
+                    {% if profile.role == 'Admin' %}
+                        <button type="button" class="btn btn-warning btn-sm" disabled>
+                            Deactivate
+                        </button>
+                    {% else %}
+                        <form method="post" action="{% url 'deactivate_user' profile.user.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                Deactivate
+                            </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <form method="post" action="{% url 'activate_user' profile.user.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Activate
+                        </button>
+                    </form>
+                {% endif %}
+
+                <form method="post" action="{% url 'delete_user' profile.user.id %}" class="d-inline ms-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to permanently delete this user?');">
+                        Delete
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}
