@@ -23,16 +23,16 @@ https://github.com/Rahuljogu/Sales-forecasting-system-using-machine-learning
 ## 📊 Dashboard Screenshots
 
 ### Sales Overview
-![Sales Overview](screenshots/Screenshot 2026-09-13 163521.png)
+![Sales Overview](screenshots/Sales Overview.png)
 
 ### ML Forecast
-![ML Forecast](screenshots/ml-forecast.png)
+![ML Forecast](screenshots/ML sales Forecast.png)
 
 ### Future Forecast
-![Future Forecast](screenshots/future-forecast.png)
+![Future Forecast](screenshots/Week Future Sales.png)
 
 ### Combined Forecast
-![Combined Forecast](screenshots/combined-forecast.png)
+![Combined Forecast](screenshots/Actual VS Prediction.png)
 ## 📌 Project Overview
 
 The Sales Forecasting System helps organizations make data-driven decisions by predicting future sales using historical data. It provides separate dashboards for different users and allows administrators to manage datasets, train machine learning models, and generate accurate sales predictions.
